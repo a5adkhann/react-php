@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { Toaster, toast } from 'react-hot-toast'
 
 const Create = () => {
 
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
 
-    const handleSubmission = async(e) => {
+    const handleSubmission = async (e) => {
         e.preventDefault();
         try {
             const formData = new FormData();
@@ -14,12 +15,13 @@ const Create = () => {
             formData.append("message", message);
 
             const resposne = await axios.post("http://localhost/react-php/server/api.php", formData);
-            console.log(resposne);
+            console.log(resposne.data.message);
+            toast.success(resposne.data.message);
 
             setName("");
             setMessage("");
         }
-        catch(err){
+        catch (err) {
             console.log(err);
         }
     }
@@ -40,6 +42,11 @@ const Create = () => {
                     </fieldset>
                 </form>
             </div>
+
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
         </>
     )
 }
