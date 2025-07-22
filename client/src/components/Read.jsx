@@ -33,11 +33,11 @@ const Read = () => {
   };
 
 
-  const saveEdit = async (edittingId) => {
+  const saveEdit = async (editingId) => {
     try {
-      const response = await axios.put(`http://localhost/react-php/server/api.php?id=${editingId}`, {
-        name: editName,
-        message: editMessage
+      const response = await axios.post(`http://localhost/react-php/server/api.php?id=${editingId}`, {
+        editName,
+        editMessage
       });
       toast.success(response.data.message);
     }
