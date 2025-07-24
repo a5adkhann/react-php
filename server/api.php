@@ -3,7 +3,7 @@ include("./db_connection.php");
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Content-Type: application/json");
 
-if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['name'] && $_POST['message']){
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $name = $_POST['name'];
     $message = $_POST['message'];
 
@@ -24,18 +24,4 @@ if($_SERVER['REQUEST_METHOD'] === "GET"){
     }
     echo json_encode(($result));
 }
-
-if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['editName'] && $_POST['editMessage']){
-    $id = $_GET['id'];
-    $name = $_POST['editName'];
-    $message = $_POST['editMessage'];
-
-    $update_query = "UPDATE messages SET name = '$name' AND message = '$message' WHERE id = '$id'";
-    $execute = mysqli_query($connect, $update_query);
-
-    echo json_encode(["status" => "success", "message" => "Updated Successfully"]);
-}
-
-
-
 ?>

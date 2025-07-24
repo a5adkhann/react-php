@@ -25,27 +25,6 @@ const Read = () => {
     fetchMessageData();
   }, []);
 
-  const handleEdit = (d) => {
-    setEditingId(d.id);
-    setEditName(d.name);
-    setEditMessage(d.message);
-    console.log(d.id);
-  };
-
-
-  const saveEdit = async (editingId) => {
-    try {
-      const response = await axios.post(`http://localhost/react-php/server/api.php?id=${editingId}`, {
-        editName,
-        editMessage
-      });
-      toast.success(response.data.message);
-    }
-    catch (err) {
-      console.log(err);
-    }
-  }
-
   const handleDelete = async () => {
     try {
       const response = await axios.delete("http://localhost/react-php/server/api.php");
@@ -76,7 +55,10 @@ const Read = () => {
                 <td>
                   {
                     editingId === d.id ?
+                    <>
                       <input className='border border-gray-300 focus:outline-0 p-2' type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
+                      <input type="hidden" value={d.id} />
+                      </>
                       :
                       d.name
                   }
