@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Read = () => {
 
@@ -25,12 +25,37 @@ const Read = () => {
     fetchMessageData();
   }, []);
 
-  const handleDelete = async () => {
+  const handleEdit = (d) => {
+    setEditingId(d.id);
+    setEditName(d.name);
+    setEditMessage(d.message);
+  }
+
+  const saveEdit = async(d) => {
     try {
-      const response = await axios.delete("http://localhost/react-php/server/api.php");
-      toast.success(response.data.message);
+      const response = await axios.put(`http://localhost/react-php/server/api.php?id=${d.id}`,
+        {
+        name: editName,
+        message: editMessage
+        }
+      );
+      console.log(response.data);
+      toast.success(response.data);
+      setEditingId(null);
+      fetchMessageData();
     }
-    catch (err) {
+    catch(err){
+      console.log(err);
+    }
+  }
+
+  const handleDelete = async(d) => {
+    try {
+      const response = await axios.delete(`http://localhost/react-php/server/api.php?id=${d.id}`);
+      console.log(response);
+      fetchMessageData();
+    }
+    catch(err){
       console.log(err);
     }
   }
@@ -57,7 +82,6 @@ const Read = () => {
                     editingId === d.id ?
                     <>
                       <input className='border border-gray-300 focus:outline-0 p-2' type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
-                      <input type="hidden" value={d.id} />
                       </>
                       :
                       d.name
@@ -76,7 +100,7 @@ const Read = () => {
                   {editingId === d. id ?
                     (
                       <>
-                        <button className="btn btn-soft btn-accent" onClick={saveEdit}>Save</button>
+                        <button className="btn btn-soft btn-accent" onClick={() => saveEdit(d)}>Save</button>
                         <button className="btn btn-soft btn-warning" onClick={() => setEditingId(null)} >Cancel</button>
                       </>
                     )
@@ -84,7 +108,7 @@ const Read = () => {
                     (
                       <>
                         <button onClick={() => handleEdit(d)} className="btn btn-soft btn-info">Edit</button>
-                        <button className="btn btn-soft btn-error" onClick={() => handleDelete(d._id)}>Delete</button>
+                        <button className="btn btn-soft btn-error" onClick={() => handleDelete(d)}>Delete</button>
                       </>
                     )
                   }
@@ -95,6 +119,7 @@ const Read = () => {
           </tbody>
         </table>
       </div>
+                  
     </>
   )
 }

@@ -1,7 +1,8 @@
 <?php
 include("./db_connection.php");
 header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Content-Type: application/json");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $name = $_POST['name'];
@@ -24,4 +25,31 @@ if($_SERVER['REQUEST_METHOD'] === "GET"){
     }
     echo json_encode(($result));
 }
+
+if( $_SERVER['REQUEST_METHOD'] === "PUT" && isset($_GET["id"])){
+    $id = $_GET['id'];
+
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $name = $data['name'];
+    $message = $data['message'];
+
+    $update_query = "UPDATE messages SET `name` = '$name', `message` = '$message' WHERE `id` = '$id'";
+    $execute = mysqli_query($connect, $update_query);
+
+    echo json_encode(["message" => "Updated Successfully"]);
+}
+
+if($_SERVER['REQUEST_METHOD'] === "DELETE" && isset($_GET["id"])){
+    $id = $_GET['id'];
+
+    $delete_query = "DELETE FROM messages WHERE id = '$id'";
+    $execute = mysqli_query($connect, $delete_query);
+
+    echo json_encode(["message" => "Deleted Successfully"]);
+}
+
+
+
+
 ?>
